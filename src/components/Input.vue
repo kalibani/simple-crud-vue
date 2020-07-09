@@ -5,6 +5,7 @@
     :type="type"
     :required="isRequired"
     :placeholder="placeholder"
+    @input="onInput"
   ></b-form-input>
 </template>
 
@@ -31,6 +32,10 @@ export default {
       type: String,
       required: true,
       default: '',
+    },
+    onInput: {
+      type: Function,
+      default: () => {},
     },
   },
 };

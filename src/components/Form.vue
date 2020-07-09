@@ -1,30 +1,29 @@
 <template>
   <div class="text-left wrapper-form">
-    <b-form @submit="onSubmit">
+    <b-form @submit.prevent="onSubmit">
       <b-form-group
         id="input-group-1"
         label="Username:"
         label-for="input-1"
       >
-      <Input
+      <b-form-input
         id="input-1"
-        :value="form.username"
+        v-model="form.username"
         type="text"
-        isRequired
+        required
         placeholder="Enter Username"
-
-      />
+        autocomplete="off"
+      ></b-form-input>
       </b-form-group>
 
       <b-form-group id="input-group-2" label="Password:" label-for="input-2">
-        <Input
+        <b-form-input
         id="input-2"
-        :value="form.password"
+        v-model="form.password"
         type="password"
-        isRequired
+        required
         placeholder="Enter Password"
-
-      />
+      ></b-form-input>
       </b-form-group>
 
       <b-button pill type="submit" variant="success">Login</b-button>
@@ -33,6 +32,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 import Input from './Input';
 
 export default {
@@ -47,6 +47,16 @@ export default {
   },
   components: {
     Input,
+  },
+  methods: {
+    ...mapActions('login', ['doLogin']),
+    onSubmit() {
+      this.doLogin(this.form);
+      this.form = {
+        username: '',
+        password: '',
+      };
+    },
   },
 };
 </script>

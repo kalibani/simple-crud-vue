@@ -1,26 +1,37 @@
 import { postLogin } from '@/api';
+import { setCookies } from '@/helpers';
 
 const activity = {
   namespaced: true,
   state: {
     isLoading: false,
+    errorMessage: '',
   },
   getters: {
     isLoading: state => state.isLoading,
+    errorMessage: state => state.errorMessage,
   },
   mutations: {
     setIsLoading(state, value) {
       state.isLoading = value;
     },
+    setErrorMessage(state, value) {
+      state.errorMessage = value;
+    },
   },
   actions: {
-    async doLogin({ commit }, data) {
+    async doLogin({ commit }, payload) {
       try {
         commit('setIsLoading', true);
-        const response = await postLogin(data);
-        console.warn(response);
-        // if (response.data.error === 0) {data.data.notifications);
-        // }
+        commit('setErrorMessage', '');
+        const { data, status } = await postLogin(payload);
+        if (status === 200 && data.message) {
+          commit('setErrorMessage', data.message);
+        } else if (status === 200 && data.token) {
+          setCookies('token', data.token);
+        } else {
+          commit('setErrorMessage', 'Oops, something happen please refresh and try again!');
+        }
         commit('setIsLoading', false);
       } catch (e) {
         throw e;

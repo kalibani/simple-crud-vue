@@ -14,23 +14,17 @@
         placeholder="Enter Username"
 
       />
-        <!-- <b-form-input
-          id="input-1"
-          v-model="form.username"
-          type="text"
-          required
-          placeholder="Enter Username"
-        ></b-form-input> -->
       </b-form-group>
 
       <b-form-group id="input-group-2" label="Password:" label-for="input-2">
-        <b-form-input
-          id="input-2"
-          type="password"
-          v-model="form.password"
-          required
-          placeholder="Enter password"
-        ></b-form-input>
+        <LoginInput
+        id="input-2"
+        :value="form.password"
+        type="password"
+        isRequired
+        placeholder="Enter Password"
+
+      />
       </b-form-group>
 
       <b-button pill type="submit" variant="success">Login</b-button>

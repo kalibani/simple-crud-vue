@@ -3,7 +3,7 @@
     :id="id"
     :value="value"
     :type="type"
-    :isRequired="isRequired"
+    :required="isRequired"
     :placeholder="placeholder"
   ></b-form-input>
 </template>

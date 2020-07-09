@@ -6,7 +6,7 @@
         label="Username:"
         label-for="input-1"
       >
-      <LoginInput
+      <Input
         id="input-1"
         :value="form.username"
         type="text"
@@ -17,7 +17,7 @@
       </b-form-group>
 
       <b-form-group id="input-group-2" label="Password:" label-for="input-2">
-        <LoginInput
+        <Input
         id="input-2"
         :value="form.password"
         type="password"
@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import LoginInput from './LoginInput';
+import Input from './Input';
 
 export default {
   name: 'Form',
@@ -46,7 +46,7 @@ export default {
     };
   },
   components: {
-    LoginInput,
+    Input,
   },
 };
 </script>

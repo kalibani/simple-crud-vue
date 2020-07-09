@@ -9,14 +9,18 @@ import 'bootstrap-vue/dist/bootstrap-vue.css';
 import App from './App';
 import router from './router';
 import store from './stores/index';
+import interceptorsSetup from './middlewares/interceptors';
 
 
 // Install BootstrapVue
 Vue.use(BootstrapVue);
-// Optionally install the BootstrapVue icon components plugin
 Vue.use(IconsPlugin);
 
 Vue.config.productionTip = false;
+
+
+// running interceptors
+interceptorsSetup();
 
 /* eslint-disable no-new */
 new Vue({

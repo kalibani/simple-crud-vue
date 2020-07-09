@@ -10,7 +10,7 @@
 
 <script>
 export default {
-  name: 'LoginInput',
+  name: 'Input',
   props: {
     id: {
       type: String,

@@ -1,5 +1,6 @@
 import { postLogin } from '@/api';
 import { setCookies } from '@/helpers';
+import router from '../router';
 
 const activity = {
   namespaced: true,
@@ -29,6 +30,7 @@ const activity = {
           commit('setErrorMessage', data.message);
         } else if (status === 200 && data.token) {
           setCookies('token', data.token);
+          router.push('/home');
         } else {
           commit('setErrorMessage', 'Oops, something happen please refresh and try again!');
         }

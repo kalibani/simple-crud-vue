@@ -13,6 +13,7 @@
         required
         placeholder="Enter Username"
         autocomplete="off"
+        autofocus
       ></b-form-input>
       </b-form-group>
 
@@ -25,15 +26,27 @@
         placeholder="Enter Password"
       ></b-form-input>
       </b-form-group>
+      <div class="text-danger font-weight-bold text-capitalize" v-if="errorMessage">
+        {{ errorMessage }}!
+      </div>
 
-      <b-button pill type="submit" variant="success">Login</b-button>
+
+      <b-button
+        pill
+        type="submit"
+        variant="success"
+        :disabled="isLoading"
+        >
+      <b-spinner small variant="success" label="Spinning" v-if="isLoading">
+      </b-spinner>
+      {{ isLoading ? '' : 'Login' }}
+      </b-button>
     </b-form>
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
-import Input from './Input';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'Form',
@@ -45,8 +58,8 @@ export default {
       },
     };
   },
-  components: {
-    Input,
+  computed: {
+    ...mapGetters('login', ['errorMessage', 'isLoading']),
   },
   methods: {
     ...mapActions('login', ['doLogin']),

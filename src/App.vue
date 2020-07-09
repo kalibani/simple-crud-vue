@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" class="bg-white">
     <router-view/>
   </div>
 </template>
@@ -16,6 +16,6 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
-  background: #2c4c7c;
+  /* background: #2c4c7c; */
 }
 </style>

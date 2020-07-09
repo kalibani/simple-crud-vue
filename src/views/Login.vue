@@ -1,5 +1,5 @@
 <template>
-  <b-container class="bv-example-row bv-example-row-flex-cols d-flex justify-content-center fluid">
+  <b-container class="d-flex justify-content-center">
 
   <b-row align-v="center">
     <b-col>
@@ -18,19 +18,8 @@ import Form from '@/components/Form';
 
 export default {
   name: 'Login',
-  props: {
-    msg: String,
-  },
-  data() {
-    return {
-
-    };
-  },
   components: {
     Form,
-  },
-  mounted() {
-    document.getElementById('input-1').focus();
   },
 };
 </script>
@@ -39,7 +28,10 @@ export default {
 <style lang="scss" scoped>
   .container {
     min-height: 100vh;
+    min-width: 100%;
     margin: auto;
     padding: auto;
+    background: #2c4c7c;
+
   }
 </style>

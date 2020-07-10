@@ -148,14 +148,6 @@
             </b-form-group>
           </b-form>
         </b-card>
-        <b-toast id="my-toast" variant="success" solid>
-          <template v-slot:toast-title>
-            <div class="d-flex flex-grow-1 align-items-baseline">
-              <strong class="mr-auto">Success add a book!</strong>
-            </div>
-          </template>
-          {{ successMessage }}
-        </b-toast>
       </b-col>
     </b-row>
   </b-container>
@@ -231,16 +223,12 @@ export default {
     },
     async onSubmit() {
       this.$v.$touch();
-      console.warn('object', this.form);
       if (!this.$v.$invalid) {
         const payload = {
           id: this.$route.params.id,
           form: this.form,
         };
         await this.updateBook(payload);
-        if (this.successMessage) {
-          this.$bvToast.show('my-toast');
-        }
       }
     },
   },

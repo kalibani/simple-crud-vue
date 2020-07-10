@@ -1,7 +1,7 @@
 <template>
 <b-container class="justify-content-center align-item-center">
-
-  <b-row align-v="center">
+  <Navbar />
+  <b-row align-v="center mt-3">
     <b-col>
       <div class="overflow-auto">
         <div class="float-right mb-3">
@@ -27,7 +27,7 @@
           <tbody class="text-center">
             <tr v-for="(element, index) in books" :key="element.isbn">
               <td>
-                {{ index + 1}}
+                {{ ((meta.page - 1) * meta.limit + index) + 1 }}
               </td>
               <td>
                 {{element.isbn}}
@@ -89,12 +89,14 @@
           <b-pagination
           class="float-right"
           v-model="queryParams.page"
-          :total-rows="books.length"
+          :total-rows="meta.totalData"
           :per-page="meta.limit"
+          @input="handleGetData"
           aria-controls="my-table"
         ></b-pagination>
         </b-col>
       </b-row>
+
       <!-- Pop Up Show data -->
       <div>
         <b-modal v-model="modalShow" ok-only>
@@ -154,6 +156,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
+import Navbar from '@/components/Navbar';
 
 export default {
   data() {
@@ -164,6 +167,9 @@ export default {
         limit: 10,
       },
     };
+  },
+  components: {
+    Navbar,
   },
   computed: {
     ...mapGetters('books', [
@@ -176,7 +182,7 @@ export default {
     ]),
   },
   mounted() {
-    this.fetchBooks(this.queryParams);
+    this.handleGetData();
   },
   methods: {
     ...mapActions('books', ['fetchBooks', 'fetchBook', 'removeBook']),
@@ -187,6 +193,9 @@ export default {
     async handleClickDelete(id) {
       await this.removeBook(id);
       await this.fetchBooks(this.queryParams);
+    },
+    handleGetData() {
+      this.fetchBooks(this.queryParams);
     },
 
   },

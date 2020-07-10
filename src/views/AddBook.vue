@@ -138,10 +138,13 @@
                 label-align-sm="right"
               >
                 <b-button
-                type="submit"
-                variant="success"
+                  type="submit"
+                  variant="success"
+                  :disabled="isLoadingId"
                 >
-                Submit
+                <b-spinner small variant="success" label="Spinning" v-if="isLoadingId">
+                </b-spinner>
+                {{ isLoadingId ? '' : 'Add book' }}
               </b-button>
               </b-form-group>
 
@@ -217,7 +220,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters('books', ['successMessage', 'isLoading']),
+    ...mapGetters('books', ['successMessage', 'isLoadingId']),
   },
   methods: {
     ...mapActions('books', ['addBook']),
@@ -225,11 +228,15 @@ export default {
       this.$v.$touch();
       if (!this.$v.$invalid) {
         await this.addBook(this.book);
-        if (this.successMessage) {
-          this.$bvToast.show('my-toast');
-        }
+        this.$bvToast.show('my-toast');
       }
     },
   },
 };
 </script>
+
+<style lang="scss" scoped>
+    .btn-success {
+      width: 98px;
+    }
+</style>

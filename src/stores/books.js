@@ -51,6 +51,7 @@ const activity = {
         const { data, status } = await getBooks(params);
         if (status === 200) {
           commit('setBooks', data.dataBook);
+          commit('setMeta', data.meta);
         } else {
           commit('setErrorMessage', 'Oops, something happen please refresh and try again!');
         }
@@ -81,6 +82,7 @@ const activity = {
       try {
         commit('setIsLoadingId', true);
         commit('setErrorMessage', '');
+        commit('setSuccessMessage', '');
 
         const year = {
           publisher_year: payload.publisher_year.slice(0, 4),
@@ -115,7 +117,7 @@ const activity = {
           = data.form;
 
         const year = {
-          publisher_year: data.form.publisher_year.slice(0, 4),
+          publisher_year: String(data.form.publisher_year).slice(0, 4),
         };
 
         const newPayload = {

@@ -1,4 +1,4 @@
-import { postLogin } from '@/api';
+import { postLogin, postSignup } from '@/api';
 import { setCookies } from '@/helpers';
 import router from '../router';
 
@@ -32,6 +32,20 @@ const activity = {
           setCookies('token', data.token);
           router.push('/book');
         } else {
+          commit('setErrorMessage', 'Oops, something happen please refresh and try again!');
+        }
+        commit('setIsLoading', false);
+      } catch (e) {
+        throw e;
+      }
+    },
+
+    async doRegister({ commit }, payload) {
+      try {
+        commit('setIsLoading', true);
+        commit('setErrorMessage', '');
+        const { status } = await postSignup(payload);
+        if (status !== 200) {
           commit('setErrorMessage', 'Oops, something happen please refresh and try again!');
         }
         commit('setIsLoading', false);

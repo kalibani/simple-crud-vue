@@ -38,13 +38,21 @@
         >
       <b-spinner small variant="success" label="Spinning" v-if="isLoading">
       </b-spinner>
-      {{ isLoading ? '' : 'Login' }}
+      {{ isLoading ? '' : 'Register' }}
       </b-button>
 
       <div class="float-right mt-4">
-        <b-link to="/register" class="text-light">Don't have any account?</b-link>
+        <b-link to="/" class="text-light">back to login</b-link>
       </div>
     </b-form>
+    <b-toast id="my-toast" variant="success" solid>
+      <template v-slot:toast-title>
+        <div class="d-flex flex-grow-1 align-items-baseline">
+          <strong class="mr-auto">Success Register!</strong>
+        </div>
+      </template>
+      You have been Success Registered!
+    </b-toast>
   </div>
 </template>
 
@@ -65,13 +73,10 @@ export default {
     ...mapGetters('login', ['errorMessage', 'isLoading']),
   },
   methods: {
-    ...mapActions('login', ['doLogin']),
-    onSubmit() {
-      this.doLogin(this.form);
-      this.form = {
-        username: '',
-        password: '',
-      };
+    ...mapActions('login', ['doRegister']),
+    async onSubmit() {
+      await this.doRegister(this.form);
+      this.$bvToast.show('my-toast');
     },
   },
 };

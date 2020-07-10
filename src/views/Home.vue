@@ -4,101 +4,165 @@
   <b-row align-v="center">
     <b-col>
       <div class="overflow-auto">
-        <b-pagination
-          v-model="currentPage"
-          :total-rows="rows"
-          :per-page="perPage"
+        <div class="float-right mb-3">
+          <b-button variant="primary">
+            <router-link class="text-light add-book" to='/book/add'>
+              Add Book
+            </router-link>
+          </b-button>
+        </div>
+        <table
+        class="table-custom finance-table table table-responsive-lg table-striped table-hover">
+          <thead class="text-center">
+            <tr>
+              <th>No</th>
+              <th>ISBN</th>
+              <th>Title</th>
+              <th>Author</th>
+              <th>Genre</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody class="text-center">
+            <tr v-for="(element, index) in books" :key="element.isbn">
+              <td>
+                {{ index + 1}}
+              </td>
+              <td>
+                {{element.isbn}}
+              </td>
+              <td>
+                {{element.title}}
+                </td>
+              <td>
+                {{element.author}}
+              </td>
+              <td>
+                {{element.genre}}
+                </td>
+              <td
+              :class="element.status ? 'text-success' : 'text-danger'">
+                  {{ element.status ? 'Active' : 'Inactive' }}
+              </td>
+                <td>
+                  <span>
+                    <router-link
+                      to= ""
+                      @click.native="handleClickView(element.id)"
+                      class="mr-2"
+                      >
+                        <b-icon icon="eye"></b-icon>
+                    </router-link>
+                    <router-link
+                      :to="`/book/edit/${element.isbn}`"
+                      class="mr-2"
+                      >
+                        <b-icon icon="pencil"></b-icon>
+                    </router-link>
+                    <router-link
+                      :to="`/book/delete/${element.isbn}`">
+                        <b-icon icon="trash"></b-icon>
+                    </router-link>
+                  </span>
+                </td>
+            </tr>
+          </tbody>
+        </table>
+        <div
+          v-if="!isLoading &&
+          books !== undefined
+          && books.length === 0" class="text-center mx-auto">
+            {{errorMessage}}
+        </div>
+        <b-col v-if="isLoading" class="text-center">
+          <b-spinner variant="info" type="grow" label="Spinning"></b-spinner>
+        </b-col>
+      </div>
+      <b-row align-h="between" v-if="books.length > 0">
+        <b-col cols="4">
+          <p class="mt-3">Current Page: {{ meta.page }}</p>
+        </b-col>
+        <b-col cols="4">
+          <b-pagination
+          class="float-right"
+          v-model="queryParams.page"
+          :total-rows="books.length"
+          :per-page="meta.limit"
           aria-controls="my-table"
         ></b-pagination>
-
-        <p class="mt-3">Current Page: {{ currentPage }}</p>
-
-
-  <table class="table-custom finance-table table table-responsive-lg table-striped table-hover">
-    <thead class="text-center">
-      <tr>
-        <th>No</th>
-        <th>ISBN</th>
-        <th>Title</th>
-        <th>Author</th>
-        <th>Genre</th>
-        <th>Status</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody class="text-center">
-      <!-- <tr v-for="(element, index) in data.data" :key="index">
-        <td>
-          {{ element.no}}
-        </td>
-        <td>{{element.isbn}}</td>
-        <td>{{element.title}}</td>
-        <td>{{element.author}}</td>
-        <td>{{element.genre}}</td>
-        <td>
-          <div :class="element.status ? 'text-success' : 'text-danger'">
-            {{ element.status ? 'Active' : 'Inactive' }}
+        </b-col>
+      </b-row>
+      <div>
+        <b-modal v-model="modalShow" ok-only>
+          <b-col v-if="isLoadingId" class="text-center">
+            <b-spinner variant="info" type="grow" label="Spinning"></b-spinner>
+          </b-col>
+          <div v-if="!isLoadingId">
+            <b-row>
+              <b-col>No</b-col>
+              <b-col>: {{book.id}}</b-col>
+            </b-row>
+            <b-row>
+              <b-col>ISBN</b-col>
+              <b-col>: {{book.isbn}}</b-col>
+            </b-row>
+            <b-row>
+              <b-col>Title</b-col>
+              <b-col>: {{book.title}}</b-col>
+            </b-row>
+            <b-row>
+              <b-col>Author</b-col>
+              <b-col>: {{book.author}}</b-col>
+            </b-row>
+            <b-row>
+              <b-col>Genre</b-col>
+              <b-col>: {{book.genre}}</b-col>
+            </b-row>
+            <b-row>
+              <b-col>Status</b-col>
+              <b-col>: {{book.status ? 'Active' : 'Inactive'}}</b-col>
+            </b-row>
           </div>
-        </td>
-        <td>
-          <td>
-            <span>
-              <i class="fa fa-eye mr-3 icon-link"></i>
-              <router-link :to="`/home/edit/${element.isbn}`">
-                <i class="fa fa-pencil mr-3 icon-link"></i>
-              </router-link>
-                <i class="fa fa-line-chart icon-link"></i>
-            </span>
-          </td>
-        </td>
-      </tr> -->
-    </tbody>
-  </table>
-  <!-- <div
-  v-if="!loading && data.data !== undefined && data.data.length === 0" class="text-center mx-auto">
-    Data not available..
-  </div>
-  <b-col v-if="loading" class="text-center">
-    <div class="loader-blue-small"></div>
-  </b-col> -->
+        </b-modal>
       </div>
-
     </b-col>
   </b-row>
 </b-container>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
   data() {
     return {
-      perPage: 3,
-      currentPage: 1,
-      items: [
-        { id: 1, first_name: 'Fred', last_name: 'Flintstone' },
-        { id: 2, first_name: 'Wilma', last_name: 'Flintstone' },
-        { id: 3, first_name: 'Barney', last_name: 'Rubble' },
-        { id: 4, first_name: 'Betty', last_name: 'Rubble' },
-        { id: 5, first_name: 'Pebbles', last_name: 'Flintstone' },
-        { id: 6, first_name: 'Bamm Bamm', last_name: 'Rubble' },
-        { id: 7, first_name: 'The Great', last_name: 'Gazzoo' },
-        { id: 8, first_name: 'Rockhead', last_name: 'Slate' },
-        { id: 9, first_name: 'Pearl', last_name: 'Slaghoople' },
-      ],
+      modalShow: false,
+      queryParams: {
+        page: 1,
+        limit: 10,
+      },
     };
   },
   computed: {
-    rows() {
-      return this.items.length;
-    },
+    ...mapGetters('books', [
+      'books',
+      'errorMessage',
+      'isLoading',
+      'meta',
+      'book',
+      'isLoadingId',
+    ]),
   },
   mounted() {
-    this.fetchBooks();
+    this.fetchBooks(this.queryParams);
   },
   methods: {
-    ...mapActions('books', ['fetchBooks']),
+    ...mapActions('books', ['fetchBooks', 'fetchBook']),
+    async handleClickView(id) {
+      this.modalShow = !this.modalShow;
+      await this.fetchBook(id);
+    },
   },
 };
 </script>
@@ -106,5 +170,10 @@ export default {
   .container {
     min-height: 100vh;
     padding-top: 40px;
+    .add-book {
+      &:hover {
+        text-decoration: none;
+      }
+    }
   }
 </style>

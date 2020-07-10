@@ -30,7 +30,7 @@ const activity = {
           commit('setErrorMessage', data.message);
         } else if (status === 200 && data.token) {
           setCookies('token', data.token);
-          router.push('/home');
+          router.push('/book');
         } else {
           commit('setErrorMessage', 'Oops, something happen please refresh and try again!');
         }

@@ -1,18 +1,23 @@
-import { getBooks } from '@/api';
-// import { setCookies } from '@/helpers';
+import { getBooks, getBook } from '@/api';
 // import router from '../router';
 
 const activity = {
   namespaced: true,
   state: {
     isLoading: false,
+    isLoadingId: false,
     books: [],
+    book: {},
     errorMessage: '',
+    meta: {},
   },
   getters: {
     isLoading: state => state.isLoading,
     errorMessage: state => state.errorMessage,
     books: state => state.books,
+    meta: state => state.meta,
+    isLoadingId: state => state.isLoadingId,
+    book: state => state.book,
   },
   mutations: {
     setIsLoading(state, value) {
@@ -24,27 +29,45 @@ const activity = {
     setBooks(state, value) {
       state.books = value;
     },
+    setMeta(state, value) {
+      state.meta = value;
+    },
+    setIsLoadingId(state, value) {
+      state.isLoadingId = value;
+    },
+    setBook(state, value) {
+      state.book = value;
+    },
   },
   actions: {
-    async fetchBooks({ commit }) {
+    async fetchBooks({ commit }, params) {
       try {
         commit('setIsLoading', true);
         commit('setErrorMessage', '');
-        const params = {
-          page: 1,
-          limit: 10,
-        };
         const { data, status } = await getBooks(params);
-        console.warn(data, status);
-        // if (status === 200 && data.message) {
-        //   commit('setErrorMessage', data.message);
-        // } else if (status === 200 && data.books) {
-        //   setCookies('token', data.token);
-        //   router.push('/home');
-        // } else {
-        //   commit('setErrorMessage', 'Oops, something happen please refresh and try again!');
-        // }
+        if (status === 200) {
+          commit('setBooks', data.dataBook);
+          commit('setMeta', data.meta);
+        } else {
+          commit('setErrorMessage', 'Oops, something happen please refresh and try again!');
+        }
         commit('setIsLoading', false);
+      } catch (e) {
+        throw e;
+      }
+    },
+
+    async fetchBook({ commit }, id) {
+      try {
+        commit('setIsLoadingId', true);
+        commit('setErrorMessage', '');
+        const { data, status } = await getBook(id);
+        if (status === 200) {
+          commit('setBook', data.dataBook);
+        } else {
+          commit('setErrorMessage', 'Oops, something happen please refresh and try again!');
+        }
+        commit('setIsLoadingId', false);
       } catch (e) {
         throw e;
       }

@@ -55,13 +55,15 @@
                         <b-icon icon="eye"></b-icon>
                     </router-link>
                     <router-link
-                      :to="`/book/edit/${element.isbn}`"
+                      :to="`/book/edit/${element.id}`"
                       class="mr-2"
                       >
                         <b-icon icon="pencil"></b-icon>
                     </router-link>
                     <router-link
-                      :to="`/book/delete/${element.isbn}`">
+                      to= ""
+                      @click.native="handleClickDelete(element.id)"
+                    >
                         <b-icon icon="trash"></b-icon>
                     </router-link>
                   </span>
@@ -93,6 +95,7 @@
         ></b-pagination>
         </b-col>
       </b-row>
+      <!-- Pop Up Show data -->
       <div>
         <b-modal v-model="modalShow" ok-only>
           <b-col v-if="isLoadingId" class="text-center">
@@ -116,16 +119,34 @@
               <b-col>: {{book.author}}</b-col>
             </b-row>
             <b-row>
+              <b-col>Publisher Name</b-col>
+              <b-col>: {{book.publisher_name}}</b-col>
+            </b-row>
+            <b-row>
+              <b-col>Publisher Year</b-col>
+              <b-col>: {{book.publisher_year}}</b-col>
+            </b-row>
+            <b-row>
               <b-col>Genre</b-col>
               <b-col>: {{book.genre}}</b-col>
             </b-row>
             <b-row>
+              <b-col>Synopsis</b-col>
+              <b-col>: {{book.synopsis}}</b-col>
+            </b-row>
+            <b-row>
               <b-col>Status</b-col>
-              <b-col>: {{book.status ? 'Active' : 'Inactive'}}</b-col>
+              <b-col>:
+                <span :class="book.status ?
+                'text-success' : 'text-danger'">
+                  {{book.status ? 'Active' : 'Inactive'}}
+                </span>
+              </b-col>
             </b-row>
           </div>
         </b-modal>
       </div>
+      <!-- Pop Up Show data -->
     </b-col>
   </b-row>
 </b-container>
@@ -158,11 +179,16 @@ export default {
     this.fetchBooks(this.queryParams);
   },
   methods: {
-    ...mapActions('books', ['fetchBooks', 'fetchBook']),
+    ...mapActions('books', ['fetchBooks', 'fetchBook', 'removeBook']),
     async handleClickView(id) {
       this.modalShow = !this.modalShow;
       await this.fetchBook(id);
     },
+    async handleClickDelete(id) {
+      await this.removeBook(id);
+      await this.fetchBooks(this.queryParams);
+    },
+
   },
 };
 </script>

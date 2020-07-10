@@ -1,5 +1,5 @@
-import { getBooks, getBook } from '@/api';
-// import router from '../router';
+import { getBooks, getBook, postBook, putBook, deleteBook } from '@/api';
+import router from '../router';
 
 const activity = {
   namespaced: true,
@@ -10,6 +10,7 @@ const activity = {
     book: {},
     errorMessage: '',
     meta: {},
+    successMessage: '',
   },
   getters: {
     isLoading: state => state.isLoading,
@@ -18,6 +19,7 @@ const activity = {
     meta: state => state.meta,
     isLoadingId: state => state.isLoadingId,
     book: state => state.book,
+    successMessage: state => state.successMessage,
   },
   mutations: {
     setIsLoading(state, value) {
@@ -38,16 +40,17 @@ const activity = {
     setBook(state, value) {
       state.book = value;
     },
+    setSuccessMessage(state, value) {
+      state.book = value;
+    },
   },
   actions: {
     async fetchBooks({ commit }, params) {
       try {
         commit('setIsLoading', true);
-        commit('setErrorMessage', '');
         const { data, status } = await getBooks(params);
         if (status === 200) {
           commit('setBooks', data.dataBook);
-          commit('setMeta', data.meta);
         } else {
           commit('setErrorMessage', 'Oops, something happen please refresh and try again!');
         }
@@ -68,6 +71,81 @@ const activity = {
           commit('setErrorMessage', 'Oops, something happen please refresh and try again!');
         }
         commit('setIsLoadingId', false);
+        return data;
+      } catch (e) {
+        throw e;
+      }
+    },
+
+    async addBook({ commit }, payload) {
+      try {
+        commit('setIsLoadingId', true);
+        commit('setErrorMessage', '');
+
+        const year = {
+          publisher_year: payload.publisher_year.slice(0, 4),
+        };
+
+        const newPayload = {
+          ...payload, ...year,
+        };
+
+        const { status } = await postBook(newPayload);
+        if (status === 200) {
+          commit('setSuccessMessage', 'You have been successfully add a book');
+        } else {
+          commit('setErrorMessage', 'Oops, something happen please refresh and try again!');
+        }
+        commit('setIsLoadingId', false);
+      } catch (e) {
+        throw e;
+      }
+    },
+
+    async updateBook({ commit }, data) {
+      try {
+        commit('setIsLoadingId', true);
+        commit('setErrorMessage', '');
+
+        const {
+          createdAt,
+          updatedAt,
+          ...filteredPayload
+        }
+          = data.form;
+
+        const year = {
+          publisher_year: data.form.publisher_year.slice(0, 4),
+        };
+
+        const newPayload = {
+          ...filteredPayload, ...year,
+        };
+        const { status } = await putBook(data.id, newPayload);
+        if (status === 200) {
+          commit('setSuccessMessage', 'You have been successfully update a book');
+          router.push('/book');
+        } else {
+          commit('setErrorMessage', 'Oops, something happen please refresh and try again!');
+        }
+        commit('setIsLoadingId', false);
+      } catch (e) {
+        throw e;
+      }
+    },
+
+    async removeBook({ commit }, id) {
+      try {
+        commit('setIsLoading', true);
+        commit('setErrorMessage', '');
+
+        const { status } = await deleteBook(id);
+        if (status === 200) {
+          commit('setSuccessMessage', 'You have been successfully remove a book');
+        } else {
+          commit('setErrorMessage', 'Oops, something happen please refresh and try again!');
+        }
+        commit('setIsLoading', false);
       } catch (e) {
         throw e;
       }

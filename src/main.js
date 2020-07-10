@@ -2,7 +2,7 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue';
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
-
+import Vuelidate from 'vuelidate';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 
@@ -11,13 +11,10 @@ import router from './router';
 import store from './stores/index';
 import interceptorsSetup from './middlewares/interceptors';
 
-
-// Install BootstrapVue
 Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);
-
+Vue.use(Vuelidate);
 Vue.config.productionTip = false;
-
 
 // running interceptors
 interceptorsSetup();

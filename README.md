@@ -1,6 +1,8 @@
 # simple-crud-vue
 
 > A Vue.js project
+> [demo](https://simple-crud-vue.netlify.app).
+
 
 ## Build Setup
 
